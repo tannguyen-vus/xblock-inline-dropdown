@@ -12,7 +12,10 @@ from lxml import etree
 from xml.etree import ElementTree as ET
 from xml.etree.ElementTree import Element, SubElement
 
-from StringIO import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 import textwrap
 import operator
