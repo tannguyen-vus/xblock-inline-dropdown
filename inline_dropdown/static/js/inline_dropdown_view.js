@@ -27,6 +27,7 @@ function InlineDropdownXBlockInitView(runtime, element) {
     var prompt = question_prompt.html();;
     
     var xblock_id = '';
+    console.log(prompt);
     	
     $.ajax({
         type: 'POST',

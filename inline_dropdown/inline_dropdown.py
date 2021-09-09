@@ -136,7 +136,7 @@ class InlineDropdownXBlock(XBlock):
         '''
         problem_progress = self._get_problem_progress()
         prompt = self._get_body(self.question_string)
-
+        
         attributes = ''
         html = self.resource_string('static/html/inline_dropdown_view.html')
         frag = Fragment(html.format(display_name=self.display_name,
@@ -374,10 +374,10 @@ class InlineDropdownXBlock(XBlock):
                 valuecorrectness = dict()
                 valuefeedback = dict()
                 if optioninput.attrib['id'] == input_ref.attrib['input']:
-                    newoption = SubElement(optioninput, 'option')
+                    newoption = SubElement(select, 'option')
                     newoption.text = ''
                     for option in optioninput.iter('option'):
-                        newoption = SubElement(option, 'option')
+                        newoption = SubElement(select, 'option')
                         newoption.text = option.text
                         valuecorrectness[option.text] = option.attrib['correct']
                         for optionhint in option.iter('optionhint'):
