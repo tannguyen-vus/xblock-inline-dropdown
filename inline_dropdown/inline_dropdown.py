@@ -374,10 +374,10 @@ class InlineDropdownXBlock(XBlock):
                 valuecorrectness = dict()
                 valuefeedback = dict()
                 if optioninput.attrib['id'] == input_ref.attrib['input']:
-                    newoption = SubElement(select, 'option')
+                    newoption = SubElement(optioninput, 'option')
                     newoption.text = ''
                     for option in optioninput.iter('option'):
-                        newoption = SubElement(select, 'option')
+                        newoption = SubElement(option, 'option')
                         newoption.text = option.text
                         valuecorrectness[option.text] = option.attrib['correct']
                         for optionhint in option.iter('optionhint'):
