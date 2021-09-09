@@ -287,7 +287,7 @@ class InlineDropdownXBlock(XBlock):
     def send_xblock_id(self, submissions, suffix=''):
         return {
             'result': 'success',
-            'xblock_id': unicode(self.scope_ids.usage_id),
+            'xblock_id': str(self.scope_ids.usage_id),
         }
 
     @XBlock.json_handler
@@ -347,7 +347,7 @@ class InlineDropdownXBlock(XBlock):
         Gets the content of a resource
         '''
         resource_content = pkg_resources.resource_string(__name__, resource_path)
-        return unicode(resource_content)
+        return str(resource_content)
 
     def render_template(self, template_path, context={}):
         '''
@@ -374,16 +374,16 @@ class InlineDropdownXBlock(XBlock):
                 valuecorrectness = dict()
                 valuefeedback = dict()
                 if optioninput.attrib['id'] == input_ref.attrib['input']:
-                    newoption = SubElement(input_ref, 'option')
+                    newoption = SubElement(select, 'option')
                     newoption.text = ''
                     for option in optioninput.iter('option'):
-                        newoption = SubElement(input_ref, 'option')
+                        newoption = SubElement(select, 'option')
                         newoption.text = option.text
                         valuecorrectness[option.text] = option.attrib['correct']
                         for optionhint in option.iter('optionhint'):
                             valuefeedback[option.text] = optionhint.text
                     input_ref.tag = 'select'
-                    input_ref.attrib['xblock_id'] = unicode(self.scope_ids.usage_id)
+                    input_ref.attrib['xblock_id'] = str(self.scope_ids.usage_id)
                     self.correctness[optioninput.attrib['id']] = valuecorrectness
                     self.feedback[optioninput.attrib['id']] = valuefeedback
 
