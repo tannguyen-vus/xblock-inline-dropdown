@@ -189,7 +189,7 @@ class InlineDropdownXBlock(XBlock):
         correct_count = 0
 
         # use sorted selection_order to iterate through selections dict
-        for key,pos in sorted(self.selection_order.iteritems(), key=lambda k,v: (-v,k)):
+        for key,pos in sorted(self.selection_order.items(), key=lambda k,v: (-v,k)):
             selected_text = self.selections[key]
 
             if self.correctness[key][selected_text] == 'True':
