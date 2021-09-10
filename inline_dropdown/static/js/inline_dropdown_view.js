@@ -1,6 +1,7 @@
 /* Javascript for Inline Dropdown XBlock. */
 function InlineDropdownXBlockInitView(runtime, element) {
     
+    console.log(element);
     var handlerUrl = runtime.handlerUrl(element, 'student_submit');
     var resetUrl = runtime.handlerUrl(element, 'student_reset');
     var hintUrl = runtime.handlerUrl(element, 'send_hints');
