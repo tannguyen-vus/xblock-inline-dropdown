@@ -193,10 +193,10 @@ class InlineDropdownXBlock(XBlock):
             selected_text = self.selections[key]
 
             if self.correctness[key][selected_text] == 'True':
-                default_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct</strong></p>'
+                default_feedback = '<p class="correct"><strong>(' + str(pos,'utf-8') + ') Correct</strong></p>'
                 if selected_text in self.feedback[key]:
                     if self.feedback[key][selected_text] is not None:
-                        self.current_feedback += '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>'
+                        self.current_feedback += '<p class="correct"><strong>(' + str(pos,'utf-8') + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>'
                     else:
                         self.current_feedback += default_feedback
                 else:
@@ -204,10 +204,10 @@ class InlineDropdownXBlock(XBlock):
                 self.student_correctness[key] = 'True'
                 correct_count += 1
             else:
-                default_feedback = '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect</strong></p>'
+                default_feedback = '<p class="incorrect"><strong>(' + str(pos,'utf-8') + ') Incorrect</strong></p>'
                 if selected_text in self.feedback[key]:
                     if self.feedback[key][selected_text] is not None:
-                        self.current_feedback += '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>'
+                        self.current_feedback += '<p class="incorrect"><strong>(' + str(pos,'utf-8') + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>'
                     else:
                         self.current_feedback += default_feedback
                 else:
@@ -287,7 +287,7 @@ class InlineDropdownXBlock(XBlock):
     def send_xblock_id(self, submissions, suffix=''):
         return {
             'result': 'success',
-            'xblock_id': str(self.scope_ids.usage_id),
+            'xblock_id': str(self.scope_ids.usage_id,'utf-8'),
         }
 
     @XBlock.json_handler
@@ -347,7 +347,7 @@ class InlineDropdownXBlock(XBlock):
         Gets the content of a resource
         '''
         resource_content = pkg_resources.resource_string(__name__, resource_path)
-        return str(resource_content)
+        return str(resource_content,'utf-8')
 
     def render_template(self, template_path, context={}):
         '''
@@ -383,7 +383,7 @@ class InlineDropdownXBlock(XBlock):
                         for optionhint in option.iter('optionhint'):
                             valuefeedback[option.text] = optionhint.text
                     input_ref.tag = 'select'
-                    input_ref.attrib['xblock_id'] = str(self.scope_ids.usage_id)
+                    input_ref.attrib['xblock_id'] = str(self.scope_ids.usage_id,'utf-8') 
                     self.correctness[optioninput.attrib['id']] = valuecorrectness
                     self.feedback[optioninput.attrib['id']] = valuefeedback
 
