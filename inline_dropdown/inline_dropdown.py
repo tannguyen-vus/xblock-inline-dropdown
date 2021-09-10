@@ -159,7 +159,7 @@ class InlineDropdownXBlock(XBlock):
             'xml_data': self.question_string,
         }
        
-        html = self.resource_string('static/html/inline_dropdown_view.html')
+        html = self.resource_string('static/html/inline_dropdown_edit.html')
         frag = Fragment(html.format(display_name=self.display_name,
                                     weight=self.weight,
                                     xml_data = self.question_string
