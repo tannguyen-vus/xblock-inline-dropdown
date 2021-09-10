@@ -3,6 +3,7 @@ function InlineDropdownXBlockInitView(runtime, element) {
     
     console.log(element);
     var handlerUrl = runtime.handlerUrl(element, 'student_submit');
+    console.log(handlerUrl);
     var resetUrl = runtime.handlerUrl(element, 'student_reset');
     var hintUrl = runtime.handlerUrl(element, 'send_hints');
     var idUrl = runtime.handlerUrl(element, 'send_xblock_id');
