@@ -370,24 +370,23 @@ class InlineDropdownXBlock(XBlock):
 
         for input_ref in tree.iter('input_ref'):
             for optioninput in tree.iter('optioninput'):
-                '''select = Element('input_ref')'''
+                select = Element('select')
                 valuecorrectness = dict()
                 valuefeedback = dict()
                 if optioninput.attrib['id'] == input_ref.attrib['input']:
-                    newoption = Element('option')
+                    newoption = SubElement(select,'option')
                     newoption.text = ''
                     for option in optioninput.iter('option'):
-                        newoption = Element('option')
+                        newoption = SubElement(select,'option')
                         newoption.text = option.text
                         valuecorrectness[option.text] = option.attrib['correct']
                         for optionhint in option.iter('optionhint'):
                             valuefeedback[option.text] = optionhint.text
-                    input_ref.tag = 'select'
-                    input_ref.attrib['xblock_id'] = str(self.scope_ids.usage_id)
-                    input_ref.append(newoption)
+
+                    select.attrib['xblock_id'] = str(self.scope_ids.usage_id)
+                    input_ref = select
                     self.correctness[optioninput.attrib['id']] = valuecorrectness
                     self.feedback[optioninput.attrib['id']] = valuefeedback
-
 
         body = tree.xpath('/inline_dropdown/body')
 
