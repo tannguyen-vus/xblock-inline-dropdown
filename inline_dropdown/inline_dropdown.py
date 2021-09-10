@@ -158,13 +158,9 @@ class InlineDropdownXBlock(XBlock):
             'weight': self.weight,
             'xml_data': self.question_string,
         }
-       
-        html = self.resource_string('static/html/inline_dropdown_edit.html')
-        frag = Fragment(html.format(display_name=self.display_name,
-                                    weight=self.weight,
-                                    xml_data = self.question_string
-                                    ))
-      
+        html = self.render_template('static/html/inline_dropdown_edit.html', context)
+
+        frag = Fragment(html)
         frag.add_javascript(self.load_resource('static/js/inline_dropdown_edit.js'))
         frag.initialize_js('InlineDropdownXBlockInitEdit')
         return frag

@@ -1,4 +1,4 @@
-{{ xml_data }}
+{% load i18n %}
 
 <div class="wrapper-comp-settings editor-with-buttons is-active" id="settings-tab">
     <ul class="list-input settings-list">
@@ -6,7 +6,7 @@
          <li class="field comp-setting-entry is-set">
             <div class="wrapper-comp-setting">
                 <label class="label setting-label" for="inline_dropdown_edit_display_name">Display Name</label>
-                <input class="input setting-input" id="inline_dropdown_edit_display_name" value="{{ display_name }}" type="text">
+                <input class="input setting-input" id="inline_dropdown_edit_display_name" value="{{ self.display_name }}" type="text">
             </div>
             <span class="tip setting-help">This name appears in the horizontal navigation at the top of the page</span>
         </li>
@@ -14,7 +14,7 @@
         <li class="field comp-setting-entry is-set">
           <div class="wrapper-comp-setting">
               <label class="label setting-label" for="inline_dropdown_edit_weight">Weight</label>
-              <input class="input setting-input" id="inline_dropdown_edit_weight" step="1" min="1" value="{{ weight }}" type="number">
+              <input class="input setting-input" id="inline_dropdown_edit_weight" step="1" min="1" value="{{ self.weight }}" type="number">
           </div>
           <span class="tip setting-help">This assigns an integer value representing the weight of this problem</span>
         </li>
@@ -24,7 +24,7 @@
             <label class="label setting-label" for="edit_data">Definition</label>
             <span class="tip setting-help">The XML definition for the problem</span>
             <div class='codemirror-editor-wrapper'>
-              <textarea class="block-xml-editor edit-data"></textarea>
+              <textarea class="block-xml-editor edit-data">{{ self.xml_data }}</textarea>
             </div>
           </div>
       </li>
