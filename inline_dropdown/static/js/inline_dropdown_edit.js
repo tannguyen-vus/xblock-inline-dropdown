@@ -1,9 +1,9 @@
 /* Javascript for Inline Dropdown XBlock. */
 function InlineDropdownXBlockInitEdit(runtime, element) {
     console.log(element);
-    var xmlEditorTextarea = $('.block-xml-editor', element),
-      //  xmlEditor = CodeMirror.fromTextArea(xmlEditorTextarea[0], { mode: 'xml', lineWrapping: true });
-    //console.log(xmlEditor);
+    var xmlEditorTextarea = $('.block-xml-editor', element);
+      xmlEditor = CodeMirror.fromTextArea(xmlEditorTextarea[0], { mode: 'xml', lineWrapping: true });
+    console.log(xmlEditor);
     $(element).find('.action-cancel').bind('click', function() {
         runtime.notify('cancel', {});
     });
