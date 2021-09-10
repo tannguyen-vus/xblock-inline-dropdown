@@ -1,8 +1,8 @@
 /* Javascript for Inline Dropdown XBlock. */
 function InlineDropdownXBlockInitEdit(runtime, element) {
- 
+   console.log('hello');
     var xmlEditorTextarea = $('.block-xml-editor', element);
-   xmlEditor = CodeMirror.fromTextArea(xmlEditorTextarea[0], { mode: 'xml', lineWrapping: true });
+   //xmlEditor = CodeMirror.fromTextArea(xmlEditorTextarea[0], { mode: 'xml', lineWrapping: true });
  
     $(element).find('.action-cancel').bind('click', function() {
         runtime.notify('cancel', {});
