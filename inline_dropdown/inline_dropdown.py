@@ -196,9 +196,9 @@ class InlineDropdownXBlock(XBlock):
                 default_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct</strong></p>'
                 if selected_text in self.feedback[key]:
                     if self.feedback[key][selected_text] is not None:
-                        self.current_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>' + self.current_feedback
+                        self.current_feedback = self.current_feedback + '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>' 
                     else:
-                        self.current_feedback = default_feedback + self.current_feedback
+                        self.current_feedback = self.current_feedback +  default_feedback 
                 else:
                     self.current_feedback += default_feedback
                 self.student_correctness[key] = 'True'
@@ -207,9 +207,9 @@ class InlineDropdownXBlock(XBlock):
                 default_feedback = '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect</strong></p>'
                 if selected_text in self.feedback[key]:
                     if self.feedback[key][selected_text] is not None:
-                        self.current_feedback = '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>' + self.current_feedback
+                        self.current_feedback = self.current_feedback + '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>' 
                     else:
-                        self.current_feedback = default_feedback + self.current_feedback
+                        self.current_feedback =  self.current_feedback + default_feedback
                 else:
                     self.current_feedback += default_feedback
                 self.student_correctness[key] = 'False'
