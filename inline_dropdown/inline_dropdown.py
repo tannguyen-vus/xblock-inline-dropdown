@@ -147,7 +147,12 @@ class InlineDropdownXBlock(XBlock):
         frag.add_javascript(self.resource_string('static/js/inline_dropdown_view.js'))
         frag.initialize_js('InlineDropdownXBlockInitView')
         return frag
-
+    '''
+    Join string
+    '''
+    def join_strings(strings):
+        return ''.join(strings)
+    
     def studio_view(self, context=None):
         '''
         The secondary view of the XBlock, shown to teachers
@@ -196,22 +201,22 @@ class InlineDropdownXBlock(XBlock):
                 default_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct</strong></p>'
                 if selected_text in self.feedback[key]:
                     if self.feedback[key][selected_text] is not None:
-                        self.current_feedback = self.current_feedback + '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>' 
+                        self.current_feedback = self.join_strings(self.current_feedback, '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>' )
                     else:
-                        self.current_feedback = self.current_feedback +  default_feedback 
+                        self.current_feedback = self.join_strings(self.current_feedback ,  default_feedback)
                 else:
-                    self.current_feedback += default_feedback
+                       self.current_feedback = self.join_strings(self.current_feedback ,  default_feedback )
                 self.student_correctness[key] = 'True'
                 correct_count += 1
             else:
                 default_feedback = '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect</strong></p>'
                 if selected_text in self.feedback[key]:
                     if self.feedback[key][selected_text] is not None:
-                        self.current_feedback = self.current_feedback + '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>' 
+                        self.current_feedback = self.join_strings(self.current_feedback, '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>' )
                     else:
-                        self.current_feedback =  self.current_feedback + default_feedback
+                        self.current_feedback =  self.join_strings(self.current_feedback , default_feedback)
                 else:
-                    self.current_feedback += default_feedback
+                        self.current_feedback = self.join_strings(self.current_feedback ,  default_feedback)
                 self.student_correctness[key] = 'False'
 
         self.score = float(self.weight) * correct_count / len(self.correctness)
