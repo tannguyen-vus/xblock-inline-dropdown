@@ -12,7 +12,7 @@ function InlineDropdownXBlockInitEdit(runtime, element) {
         var data = {
             'display_name': $('#inline_dropdown_edit_display_name').val(),
             'weight': $('#inline_dropdown_edit_weight').val(),
-            'max_attemps': $('#inline_dropdown_edit_max_attempts').val(),
+            'max_attempts': $('#inline_dropdown_edit_max_attempts').val(),
             'data': xmlEditor.getValue()
         };
         

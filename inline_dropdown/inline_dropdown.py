@@ -478,13 +478,3 @@ class InlineDropdownXBlock(XBlock):
                 'max_grade': self.weight,
             }
         )
-  # TO-DO: change this to create the scenarios you'd like to see in the
-    # workbench while developing your XBlock.
-    @staticmethod
-    def workbench_scenarios():
-        """A canned scenario for display in the workbench."""
-        return [
-            ("InlineDropdownXBlock",
-             """<inline-dropdown/>
-             """)
-        ]
