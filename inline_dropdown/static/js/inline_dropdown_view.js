@@ -60,16 +60,26 @@ function InlineDropdownXBlockInitView(runtime, element) {
     }
 
 	function post_submit(result) {
-        problem_progress.text('(' + result.problem_progress + ')');
-		show_feedback(result.feedback);
-        reset_hint();
-        
-        // reset the prompt to the original value to remove previous decorations
-        question_prompt.html(prompt);
-        // restore select values
-        restore_selections(result.submissions);
-		// add decorations to indicate correctness
-        add_decorations(result.correctness, result.selection_order);
+
+        if(result.status=='max')
+        {
+            show_feedback('the maximum number of attempts has been reached')
+            reset_hint();
+        }
+        else
+        {
+            problem_progress.text('(' + result.problem_progress + ')');
+            show_feedback(result.feedback);
+            reset_hint();
+            
+            // reset the prompt to the original value to remove previous decorations
+            question_prompt.html(prompt);
+            // restore select values
+            restore_selections(result.submissions);
+            // add decorations to indicate correctness
+            add_decorations(result.correctness, result.selection_order);
+        }
+      
         
 	}
 	

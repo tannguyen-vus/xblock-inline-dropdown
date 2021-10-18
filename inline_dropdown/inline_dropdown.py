@@ -123,9 +123,16 @@ class InlineDropdownXBlock(XBlock):
         default=2,
         scope=Scope.settings,
     )
-
+    max_attempts = Integer(
+        display_name='Maximum attempts',
+        help='Defines the number of times a student can try to answer this problem.  If the value '
+        'is not set, infinite attempts are allowed.',
+        default=2,
+        scope=Scope.settings,
+    )
     has_score = True
-
+    # The number of attempts used.
+    attempts = Integer(scope=Scope.user_state, default=0)
     '''
     Main functions
     '''
@@ -185,7 +192,21 @@ class InlineDropdownXBlock(XBlock):
         '''
         Save student answer
         '''
-
+        """Common implementation for the check and save handlers."""
+        if self.max_attempts and self.attempts >= self.max_attempts:
+            # The "Check" button is hidden when the maximum number of attempts has been reached, so
+            # we can only get here by manually crafted requests.  We simply return the current
+            # status without rechecking or storing the answers in that case.
+            result = {
+            'status': 'max',
+            'success': True,
+            'problem_progress': self._get_problem_progress(),
+            'submissions': self.selections,
+            'feedback': self.current_feedback,
+            'correctness': self.student_correctness,
+            'selection_order': self.selection_order,
+            }
+            return result
         self.selections = submissions['selections']
         self.selection_order = submissions['selection_order']
 
@@ -229,7 +250,7 @@ class InlineDropdownXBlock(XBlock):
         self._publish_problem_check()
 
         self.completed = True
-
+        self.attempts += 1
         result = {
             'success': True,
             'problem_progress': self._get_problem_progress(),
@@ -250,7 +271,7 @@ class InlineDropdownXBlock(XBlock):
         self.current_feedback = ''
         self.selections = {}
         self.student_correctness = {}
-
+        self.attempts =0
         self._publish_grade()
 
         self.completed = False
@@ -379,10 +400,10 @@ class InlineDropdownXBlock(XBlock):
                 valuecorrectness = dict()
                 valuefeedback = dict()
                 if optioninput.attrib['id'] == input_ref.attrib['input']:
-                    newoption = ET.SubElement(input_ref,'option')
+                    newoption = etree.SubElement(input_ref,'option')
                     newoption.text = ''
                     for option in optioninput.iter('option'):
-                        newoption = ET.SubElement(input_ref,'option')
+                        newoption = etree.SubElement(input_ref,'option')
                         newoption.text = option.text
                         valuecorrectness[option.text] = option.attrib['correct']
                         for optionhint in option.iter('optionhint'):
@@ -450,3 +471,13 @@ class InlineDropdownXBlock(XBlock):
                 'max_grade': self.weight,
             }
         )
+  # TO-DO: change this to create the scenarios you'd like to see in the
+    # workbench while developing your XBlock.
+    @staticmethod
+    def workbench_scenarios():
+        """A canned scenario for display in the workbench."""
+        return [
+            ("InlineDropdownXBlock",
+             """<inline-dropdown/>
+             """)
+        ]
