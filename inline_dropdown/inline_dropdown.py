@@ -294,6 +294,13 @@ class InlineDropdownXBlock(XBlock):
             weight = 0
         if weight > 0:
             self.weight = weight
+        
+        try:
+            max_attempts = int(submissions['max_attempts'])
+        except ValueError:
+            max_attempts = 0
+        if max_attempts > 0:
+            self.max_attempts = max_attempts
         xml_content = submissions['data']
 
         try:
