@@ -168,6 +168,7 @@ class InlineDropdownXBlock(XBlock):
         context = {
             'display_name': self.display_name,
             'weight': self.weight,
+            'max_attempts': self.max_attempts,
             'xml_data': self.question_string,
         }
         html = self.render_template('static/html/inline_dropdown_edit.html', context)
@@ -478,3 +479,16 @@ class InlineDropdownXBlock(XBlock):
                 'max_grade': self.weight,
             }
         )
+  # TO-DO: change this to create the scenarios you'd like to see in the
+    # workbench while developing your XBlock.
+    @staticmethod
+    def workbench_scenarios():
+        """A canned scenario for display in the workbench."""
+        return [
+            ("InlineDropdownXBlock",
+             """<inline-dropdown/>
+             """),
+         
+        ]
+   
+    
