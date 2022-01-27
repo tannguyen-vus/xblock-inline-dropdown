@@ -75,6 +75,7 @@ class InlineDropdownXBlock(XBlock):
         default='False',
         scope=Scope.settings,
         help='This title appears in header pane')
+    
     question_string = String(
         help='Default question content ',
         scope=Scope.content,
