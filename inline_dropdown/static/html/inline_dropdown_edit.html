@@ -34,8 +34,8 @@
         </li>
         <li class="field comp-setting-entry is-set">
           <div class="wrapper-comp-setting">
-              <label class="label setting-label" for="fillinblank_edit_case_sensitive">Case Sensitive</label>
-              <select class="input setting-input" id="fillinblank_edit_case_sensitive">
+              <label class="label setting-label" for="inline_dropdown_edit_case_sensitive">Case Sensitive</label>
+              <select class="input setting-input" id="inline_dropdown_edit_case_sensitive">
                 {% for ans in case_sensitive_list %}
                 {% if case_sensitive == ans.Value %}
                 <option value="{{ ans.Value }}" selected>{{ ans.Display }}</option>
@@ -50,8 +50,8 @@
         </li>
         <li class="field comp-setting-entry is-set">
           <div class="wrapper-comp-setting">
-            <label class="label setting-label" for="fillinblank_edit_randomization">Randomization</label>
-            <select class="input setting-input" id="fillinblank_edit_randomization">
+            <label class="label setting-label" for="inline_dropdown_edit_randomization">Randomization</label>
+            <select class="input setting-input" id="inline_dropdown_edit_randomization">
               {% for ans in randomization_list %}
               {% if randomization == ans.Value %}
               <option value="{{ ans.Value }}" selected>{{ ans.Display }}</option>
@@ -66,8 +66,8 @@
       </li>
       <li class="field comp-setting-entry is-set">
         <div class="wrapper-comp-setting">
-          <label class="label setting-label" for="fillinblank_edit_show_answer">Show Answer</label>
-          <select class="input setting-input" id="fillinblank_edit_show_answer">
+          <label class="label setting-label" for="inline_dropdown_edit_show_answer">Show Answer</label>
+          <select class="input setting-input" id="inline_dropdown_edit_show_answer">
             {% for ans in show_answer_list %}
             {% if show_answer == ans.Value %}
             <option value="{{ ans.Value }}" selected>{{ ans.Display }}</option>
@@ -82,16 +82,16 @@
     </li>
     <li class="field comp-setting-entry is-set">
       <div class="wrapper-comp-setting">
-          <label class="label setting-label" for="fillinblank_edit_show_answer_number_attempts">Show Answer: Number of Attempts</label>
-          <input class="input setting-input" id="fillinblank_edit_show_answer_number_attempts" step="1" min="1" value="{{ show_answer_number_attempts }}" type="number">
+          <label class="label setting-label" for="inline_dropdown_edit_show_answer_number_attempts">Show Answer: Number of Attempts</label>
+          <input class="input setting-input" id="inline_dropdown_edit_show_answer_number_attempts" step="1" min="1" value="{{ show_answer_number_attempts }}" type="number">
       </div>
       <span class="tip setting-help">Number of times the student must attempt to answer the question before the Show Answer button appears.</span>
     </li>
 
     <li class="field comp-setting-entry is-set">
       <div class="wrapper-comp-setting">
-        <label class="label setting-label" for="fillinblank_edit_show_reset_button">Show Reset Button</label>
-        <select class="input setting-input" id="fillinblank_edit_show_reset_button">
+        <label class="label setting-label" for="inline_dropdown_edit_show_reset_button">Show Reset Button</label>
+        <select class="input setting-input" id="inline_dropdown_edit_show_reset_button">
           {% for ans in show_reset_button_list %}
           {% if show_reset_button == ans.Value %}
           <option value="{{ ans.Value }}" selected>{{ ans.Display }}</option>
