@@ -11,6 +11,7 @@ function InlineDropdownXBlockInitEdit(runtime, element) {
     $(element).find('.action-save').bind('click', function() {
         var data = {
             'display_name': $('#inline_dropdown_edit_display_name').val(),
+            'title': $('#inline_dropdown_edit_title').val(),
             'weight': $('#inline_dropdown_edit_weight').val(),
             'max_attempts': $('#inline_dropdown_edit_max_attempts').val(),
             'data': xmlEditor.getValue()
