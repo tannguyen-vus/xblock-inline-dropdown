@@ -36,6 +36,12 @@ class InlineDropdownXBlock(XBlock):
         scope=Scope.settings,
         help='This name appears in the horizontal navigation at the top of the page')
 
+    title = String(
+        display_name='Title',
+        default='<h1>Input title</h1>',
+        scope=Scope.settings,
+        help='This title appears in header pane')
+
     hints = List(
         default=[],
         scope=Scope.content,
@@ -149,7 +155,9 @@ class InlineDropdownXBlock(XBlock):
         frag = Fragment(html.format(display_name=self.display_name,
                                     problem_progress=problem_progress,
                                     prompt=prompt,
-                                    attributes=attributes))
+                                    attributes=attributes,
+                                    title = self.title
+                                    ))
         frag.add_css(self.resource_string('static/css/inline_dropdown.css'))
         frag.add_javascript(self.resource_string('static/js/inline_dropdown_view.js'))
         frag.initialize_js('InlineDropdownXBlockInitView')
@@ -289,6 +297,7 @@ class InlineDropdownXBlock(XBlock):
         Save studio edits
         '''
         self.display_name = submissions['display_name']
+        self.title = submissions['title']
         try:
             weight = int(submissions['weight'])
         except ValueError:
