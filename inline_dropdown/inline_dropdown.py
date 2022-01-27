@@ -1,6 +1,5 @@
 '''  Inline Dropdown XBlock main Python class'''
 
-from turtle import title
 import pkg_resources
 from django.template import Context, Template
 from django.utils.translation import ungettext
