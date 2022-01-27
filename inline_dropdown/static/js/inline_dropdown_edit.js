@@ -14,6 +14,11 @@ function InlineDropdownXBlockInitEdit(runtime, element) {
             'title': $('#inline_dropdown_edit_title').val(),
             'weight': $('#inline_dropdown_edit_weight').val(),
             'max_attempts': $('#inline_dropdown_edit_max_attempts').val(),
+            'show_answer_number_attempts': $('#fillinblank_edit_show_answer_number_attempts').val(),
+            'show_answer': $('#inline_dropdown_edit_show_answer option:selected').val(),
+            'randomization':$('#inline_dropdown_edit_randomization option:selected').val(),
+            'show_reset_button':$('#inline_dropdown_edit_show_reset_button option:selected').val(),
+            'case_sensitive':$('#inline_dropdown_edit_case_sensitive option:selected').val(),
             'data': xmlEditor.getValue()
         };
         

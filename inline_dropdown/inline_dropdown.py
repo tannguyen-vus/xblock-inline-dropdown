@@ -1,5 +1,6 @@
 '''  Inline Dropdown XBlock main Python class'''
 
+from turtle import title
 import pkg_resources
 from django.template import Context, Template
 from django.utils.translation import ungettext
@@ -47,7 +48,33 @@ class InlineDropdownXBlock(XBlock):
         scope=Scope.content,
         help='Hints for the question',
     )
-
+    randomization = String(
+        display_name='Randomization',
+        default='Always',
+        scope=Scope.settings,
+        help='This title appears in header pane')
+    show_answer = String(
+        display_name='Show Answer',
+        default='Always',
+        scope=Scope.settings,
+        help='This title appears in header pane')
+    show_reset_button = String(
+        display_name='Show Reset Button',
+        default='Always',
+        scope=Scope.settings,
+        help='This title appears in header pane')
+    show_answer_number_attempts = Integer(
+        display_name='Show Answer: Number of attempts',
+        help='Defines the number of times a student can try to answer this problem.  If the value '
+        'is not set, infinite attempts are allowed.',
+        default=2,
+        scope=Scope.settings,
+    )
+    case_sensitive = String(
+        display_name='Case Sensitive',
+        default='False',
+        scope=Scope.settings,
+        help='This title appears in header pane')
     question_string = String(
         help='Default question content ',
         scope=Scope.content,
@@ -173,11 +200,51 @@ class InlineDropdownXBlock(XBlock):
         The secondary view of the XBlock, shown to teachers
         when editing the XBlock.
         '''
+        show_answer_list = [
+
+           	{"Value":"Always","Display":"Always"},
+            {"Value":"Answered","Display":"Answered"},
+            {"Value":"Attempted or Past Due","Display":"Attempted or Past Due"},
+            {"Value":"Closed","Display":"Closed"},
+            {"Value":"Finished","Display":"Finished"},
+            {"Value":"Correct or Past Due","Display":"Correct or Past Due"},
+            {"Value":"Past Due","Display":"Past Due"},
+            {"Value":"Never","Display":"Never"},
+            {"Value":"After Some Number of Attempts","Display":"After Some Number of Attempts"},
+            {"Value":"After All Attempts","Display":"After All Attempts"},
+            {"Value":"After All Attempts or Correct","Display":"After All Attempts or Correct"},
+            {"Value":"Attempted","Display":"Attempted"}
+        ]
+
+        radomization_list = [
+            {"Value":"Always","Display":"Always"},
+            {"Value":"On Reset","Display":"On Reset"},
+            {"Value":"Never","Display":"Never"},
+            {"Value":"Per Student","Display":"Per Student"}
+        ]
+        show_reset_button_list =[
+            {"Value":"True","Display":"True"},
+            {"Value":"False","Display":"False"}
+        ]
+        case_sensitive_list =[
+            {"Value":"True","Display":"True"},
+            {"Value":"False","Display":"False"}
+        ]
         context = {
             'display_name': self.display_name,
             'weight': self.weight,
             'max_attempts': self.max_attempts,
             'xml_data': self.question_string,
+            'title': self.title,
+            'show_answer_list': show_answer_list,
+            'randomization_list': radomization_list,
+            'show_reset_button_list': show_reset_button_list,
+            'case_sensitive_list' :case_sensitive_list,
+            'show_answer':self.show_answer,
+            'show_reset_button':self.show_reset_button,
+            'randomization': self.randomization,
+            'show_answer_number_attempts' : self.show_answer_number_attempts,
+            'case_sensitive' :self.case_sensitive
         }
         html = self.render_template('static/html/inline_dropdown_edit.html', context)
 
@@ -298,6 +365,11 @@ class InlineDropdownXBlock(XBlock):
         '''
         self.display_name = submissions['display_name']
         self.title = submissions['title']
+        self.show_answer_number_attempts = submissions['show_answer_number_attempts']
+        self.show_reset_button = submissions['show_reset_button']
+        self.show_answer = submissions['show_answer']
+        self.randomization = submissions['randomization']
+        self.case_sensitive =submissions['case_sensitive']
         try:
             weight = int(submissions['weight'])
         except ValueError:
