@@ -3,6 +3,7 @@ function InlineDropdownXBlockInitView(runtime, element) {
     
    
     var handlerUrl = runtime.handlerUrl(element, 'student_submit');
+    var handlerUrl_show_answers = runtime.handlerUrl(element, 'student_show_answers');
     var resetUrl = runtime.handlerUrl(element, 'student_reset');
     var hintUrl = runtime.handlerUrl(element, 'send_hints');
     var idUrl = runtime.handlerUrl(element, 'send_xblock_id');
@@ -18,6 +19,8 @@ function InlineDropdownXBlockInitView(runtime, element) {
     var problem_progress = $element.find('.problem_progress');
     var question_prompt = $element.find('.question_prompt');
     var feedback_div = $element.find('.feedback');
+    var answer_div = $element.find('.answer');
+    var reset_div = $element.find('reset');
     var hint_div = $element.find('.hint');
     var hint_button_holder = $element.find('.hint_button_holder');
         
@@ -77,8 +80,34 @@ function InlineDropdownXBlockInitView(runtime, element) {
             // restore select values
             restore_selections(result.submissions);
             // add decorations to indicate correctness
-            add_decorations(result.correctness, result.selection_order);
+            add_decorations(result.correctness, result.selection_order,result.feedback_list,result.submissions,0);
         }
+      
+        
+	}
+    function show_answers(result) {
+
+        if(result.status=='max')
+        {
+            problem_progress.text('(' + result.problem_progress + ')');
+            //show_feedback(result.feedback);
+            reset_hint();
+            
+            // reset the prompt to the original value to remove previous decorations
+            question_prompt.html(prompt);
+            // restore select values
+            restore_selections(result.submissions);
+            // add decorations to indicate correctness
+            add_decorations(result.correctness, result.selection_order,result.feedback_list,result.submissions,1);
+            
+        }
+        else
+        {
+            show_feedback('the number of attempts hasn\'t been reached to '+result.show_answer_number_attempts);
+            reset_hint();
+        }
+           
+     
       
         
 	}
@@ -92,21 +121,56 @@ function InlineDropdownXBlockInitView(runtime, element) {
         });        
 	}
 	
-	function add_decorations(correctness, selection_order) {
+	function add_decorations(correctness, selection_order,feedback,selection,show_answer) {
         $("select").each(function() { 
         	if (this.getAttribute('xblock_id') == xblock_id) {
         		
         		var decoration_number = selection_order[this.getAttribute('input')];
-        		        		
+                var correctness_val = correctness[this.getAttribute('input')];
+                var feedback_val = feedback[this.getAttribute('input')];
+       
+                var selection_val = selection[this.getAttribute('input')];
+              
+                $(this).val(selection_val);	
         		// add new decoration to the select
-        		if (correctness[this.getAttribute('input')] == 'True') {
+        		/*if (correctness[this.getAttribute('input')] == 'True') {
 	        		$('<span class="inline_dropdown feedback_number_correct">(' + decoration_number + ')</span>').insertAfter(this);
 	        		$('<span class="fa fa-check status correct"/>').insertAfter(this);
         		} else {
 	        		$('<span class="inline_dropdown feedback_number_incorrect">(' + decoration_number + ')</span>').insertAfter(this);
 	        		$('<span class="fa fa-times status incorrect"/>').insertAfter(this);
+        		}*/
+                // add new decoration to the select
+        		if (correctness[this.getAttribute('input')] == 'True') {
+                    if (show_answer == 1)
+                    {
+                        $('&nbsp;<span class="status correct"><em> (correct answer: '+feedback_val+')</em></span>').insertAfter(this);
+                        $('&nbsp;<span class="inline-dropdown feedback_number_correct"> (' + decoration_number + ')</span>').insertAfter(this);
+                        $('&nbsp;<span class="fa fa-check status correct"/>').insertAfter(this);
+                        $(this).attr('class','type_true');
+                        $(this).attr('title', 'corrected answer: '+correctness_val);  
+                    }
+                    else
+                    {
+                        //$('&nbsp;<span class="status correct"><em> (correct answer:'+feedback_val+')</em></span>').insertAfter(this);
+                        $('&nbsp;<span class="inline-dropdown feedback_number_correct"> (' + decoration_number + ')</span>').insertAfter(this);
+                        $('&nbsp;<span class="fa fa-check status correct"/>').insertAfter(this);
+                        $(this).attr('class','type_true');
+                        $(this).attr('title', 'corrected answer: '+correctness_val);
+                    }
+        		} else {
+                    $('&nbsp;<span class="status correct"><em> (correct answer: '+feedback_val+')</em></span>').insertAfter(this);
+                    $('&nbsp;<span class="inline-dropdown feedback_number_incorrect"> (' + decoration_number + ')</span>').insertAfter(this);
+                    $('&nbsp;<span class="fa fa-times status incorrect"/>').insertAfter(this);
+           
+                    $(this).attr('class','type_false');
+                    
+                    //$(this).attr('title', feedback_val);
         		}
-        	}
+              
+            } 
+            
+        	
         });        
 	}
 	
@@ -208,7 +272,36 @@ function InlineDropdownXBlockInitView(runtime, element) {
     	    });
         }
 	});
-
+    $('.answer_button', element).click(function(eventObject) {
+        pre_submit();
+        var selections = {};
+        var selection_order = {};
+        var complete = true;
+        var counter = 1;
+        $("select").each(function() { 
+        	if (this.getAttribute('xblock_id') == xblock_id) {
+        		/*if (this.value.length == 0) {
+    	    		complete = false;
+    	    		show_feedback('<p class="incorrect">You haven\'t completed the question.</p>');
+	        	} */
+        		selections[this.getAttribute('input')] = this.value;
+        		selection_order[this.getAttribute('input')] = counter;
+        		counter++;
+        	}
+        });
+        var data = {
+                selections: selections,
+                selection_order: selection_order,
+            };
+        if (complete) {
+	        $.ajax({
+    	        type: 'POST',
+        	    url: handlerUrl_show_answers,
+            	data: JSON.stringify(data),
+	            success: show_answers
+    	    });
+        }
+	});
     $('.reset_button', element).click(function(eventObject) {
 		var data = {};
         $.ajax({

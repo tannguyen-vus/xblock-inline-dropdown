@@ -59,7 +59,7 @@ class InlineDropdownXBlock(XBlock):
         help='This title appears in header pane')
     show_reset_button = String(
         display_name='Show Reset Button',
-        default='Always',
+        default='True',
         scope=Scope.settings,
         help='This title appears in header pane')
     show_answer_number_attempts = Integer(
@@ -112,7 +112,11 @@ class InlineDropdownXBlock(XBlock):
         scope=Scope.user_state,
         default={},
     )
-
+    correctness_text = Dict(
+        help='Correctness of input values by text',
+        scope=Scope.user_state,
+        default={},
+    )
     selection_order = Dict(
         help='Order of selections in body',
         scope=Scope.user_state,
@@ -178,12 +182,27 @@ class InlineDropdownXBlock(XBlock):
         prompt = self._get_body(self.question_string)
         
         attributes = ''
+        reset_button=''
+        answer_button=''
+        if self.show_reset_button == 'True':
+            reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
+        if self.show_answer == "Always":
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "Answered"  and self.completed == True:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "Attempted"  and self.attempts>0:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+
         html = self.resource_string('static/html/inline_dropdown_view.html')
         frag = Fragment(html.format(display_name=self.display_name,
                                     problem_progress=problem_progress,
                                     prompt=prompt,
                                     attributes=attributes,
-                                    title = self.title
+                                    title = self.title,
+                                    feedback=self.current_feedback,
+                                    feedback_list = self.feedback,
+                                    reset_button = reset_button,
+                                    answer_button = answer_button
                                     ))
         frag.add_css(self.resource_string('static/css/inline_dropdown.css'))
         frag.add_javascript(self.resource_string('static/js/inline_dropdown_view.js'))
@@ -293,27 +312,33 @@ class InlineDropdownXBlock(XBlock):
         # use sorted selection_order to iterate through selections dict
         for key,pos in sorted(self.selection_order.items(), key=lambda t: t[1], reverse=True):
             selected_text = self.selections[key]
-
-            if self.correctness[key][selected_text] == 'True':
+            answer =''
+            first_answer =''
+            for keyn in  self.correctness[key]:
+                answer = self.correctness[key][keyn] +' | ' + answer
+                first_answer =self.correctness[key][keyn]
+           
+            self.correctness_text[key]=first_answer
+            if selected_text in self.correctness[key]: #[selected_text] == 'True':
                 default_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct</strong></p>'
-                if selected_text in self.feedback[key]:
-                    if self.feedback[key][selected_text] is not None:
-                        self.current_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>' + self.current_feedback
-                    else:
-                        self.current_feedback = default_feedback + self.current_feedback
-                else:
-                        self.current_feedback = default_feedback + self.current_feedback
+                #if selected_text in self.feedback[key]:
+                #    if self.feedback[key][selected_text] is not None:
+                #        self.current_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct: </strong>' + self.feedback[key][selected_text] + '</p>' + self.current_feedback
+                #    else:
+                #        self.current_feedback = default_feedback + self.current_feedback
+                #else:
+                #        self.current_feedback = default_feedback + self.current_feedback
                 self.student_correctness[key] = 'True'
                 correct_count += 1
             else:
                 default_feedback = '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect</strong></p>'
-                if selected_text in self.feedback[key]:
-                    if self.feedback[key][selected_text] is not None:
-                        self.current_feedback = '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>' + self.current_feedback 
-                    else:
-                        self.current_feedback =  default_feedback + self.current_feedback
-                else:
-                        self.current_feedback = default_feedback + self.current_feedback
+                #if selected_text in self.feedback[key]:
+                #    if self.feedback[key][selected_text] is not None:
+                #        self.current_feedback = '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect: </strong>' + self.feedback[key][selected_text] + '</p>' + self.current_feedback 
+                #    else:
+                #        self.current_feedback =  default_feedback + self.current_feedback
+                #else:
+                #        self.current_feedback = default_feedback + self.current_feedback
                 self.student_correctness[key] = 'False'
 
         self.score = float(self.weight) * correct_count / len(self.correctness)
@@ -327,16 +352,70 @@ class InlineDropdownXBlock(XBlock):
 
         self.completed = True
         self.attempts += 1
+        reset_button=''
+        answer_button=''
+        if self.show_reset_button == 'True':
+            reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
+        if self.show_answer == "Always":
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "Answered"  and self.completed == True:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "Attempted"  and self.attempts>0:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+
         result = {
             'success': True,
             'problem_progress': self._get_problem_progress(),
             'submissions': self.selections,
             'feedback': self.current_feedback,
+            'feedback_list' : self.correctness_text,
             'correctness': self.student_correctness,
             'selection_order': self.selection_order,
+            'reset_button' :reset_button,
+            'answer_button' : answer_button
         }
         return result
+    @XBlock.json_handler
+    def student_show_answers(self, submissions, suffix=''):
+        #student show answers
+        max_attempts =''
+        if self.show_answer_number_attempts and self.attempts >= self.show_answer_number_attempts:
+            max_attempts ='max'
 
+        self.selections = submissions['selections']
+        self.selection_order = submissions['selection_order']
+
+        self.current_feedback = ''
+
+        correct_count = 0
+
+        # use sorted selection_order to iterate through selections dict
+        for key,pos in sorted(self.selection_order.items(), key=lambda t: t[1], reverse=True):
+            selected_text = self.selections[key]
+            answer =''
+            first_answer=''
+            for keyn in  self.correctness[key]:
+                answer = self.correctness[key][keyn] +' | ' + answer
+                first_answer = self.correctness[key][keyn]
+            self.correctness_text[key] = first_answer
+            self.current_feedback = '<p class="correct"><strong>(' + str(pos) + ') correct answers: </strong>' + first_answer+ '</p>' + self.current_feedback 
+            
+                #else:
+                #self.current_feedback = default_feedback + self.current_feedback
+            self.student_correctness[key] = 'True'
+            correct_count += 1
+        result = {
+            'success': True,
+            'status': max_attempts,
+            'problem_progress': self._get_problem_progress(),
+            'submissions': self.selections,
+            'feedback': self.current_feedback,
+            'feedback_list' : self.correctness_text,
+            'correctness': self.student_correctness,
+            'selection_order': self.selection_order,
+            'show_answer_number_attempts': self.show_answer_number_attempts
+        }
+        return result
     @XBlock.json_handler
     def student_reset(self, submissions, suffix=''):
         '''
@@ -494,7 +573,8 @@ class InlineDropdownXBlock(XBlock):
                     for option in optioninput.iter('option'):
                         newoption = etree.SubElement(input_ref,'option')
                         newoption.text = option.text
-                        valuecorrectness[option.text] = option.attrib['correct']
+                        if option.attrib['correct'] == 'True':
+                            valuecorrectness[option.text] = option.text #option.attrib['correct']
                         for optionhint in option.iter('optionhint'):
                             valuefeedback[option.text] = optionhint.text
                     input_ref.tag = 'select'
