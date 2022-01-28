@@ -486,13 +486,15 @@ class InlineDropdownXBlock(XBlock):
 
     @XBlock.json_handler
     def restore_state(self, submissions, suffix=''):
-        return {
+           return {
             'result': 'success',
             'selections': self.selections,
             'correctness': self.student_correctness,
             'selection_order': self.selection_order,
+            'feedback_list' : self.correctness_text,
             'current_feedback': self.current_feedback,
             'completed': self.completed,
+
         }
 
     @XBlock.json_handler
