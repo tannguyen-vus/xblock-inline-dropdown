@@ -1,5 +1,6 @@
 '''  Inline Dropdown XBlock main Python class'''
 
+from cgitb import reset
 import pkg_resources
 from django.template import Context, Template
 from django.utils.translation import ungettext
@@ -192,7 +193,8 @@ class InlineDropdownXBlock(XBlock):
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
         if self.show_answer == "Attempted"  and self.attempts>0:
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
-
+        if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
         html = self.resource_string('static/html/inline_dropdown_view.html')
         frag = Fragment(html.format(display_name=self.display_name,
                                     problem_progress=problem_progress,
@@ -362,7 +364,8 @@ class InlineDropdownXBlock(XBlock):
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
         if self.show_answer == "Attempted"  and self.attempts>0:
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
-
+        if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
         result = {
             'success': True,
             'problem_progress': self._get_problem_progress(),
@@ -378,9 +381,9 @@ class InlineDropdownXBlock(XBlock):
     @XBlock.json_handler
     def student_show_answers(self, submissions, suffix=''):
         #student show answers
-        max_attempts =''
-        if self.show_answer_number_attempts and self.attempts >= self.show_answer_number_attempts:
-            max_attempts ='max'
+        #max_attempts =''
+        #if self.show_answer_number_attempts and self.attempts >= self.show_answer_number_attempts:
+        max_attempts ='max'
 
         self.selections = submissions['selections']
         self.selection_order = submissions['selection_order']
@@ -430,10 +433,24 @@ class InlineDropdownXBlock(XBlock):
         self._publish_grade()
 
         self.completed = False
-
+        
+        reset_button=''
+        answer_button=''
+        if self.show_reset_button == 'True':
+            reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
+        if self.show_answer == "Always":
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "Answered"  and self.completed == True:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "Attempted"  and self.attempts>0:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
         result = {
             'success': True,
             'problem_progress': self._get_problem_progress(),
+            'reset_button' : reset_button,
+            'answer_button' : answer_button
         }
         return result
 
@@ -486,7 +503,20 @@ class InlineDropdownXBlock(XBlock):
 
     @XBlock.json_handler
     def restore_state(self, submissions, suffix=''):
-           return {
+        
+        reset_button=''
+        answer_button=''
+        if self.show_reset_button == 'True':
+            reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
+        if self.show_answer == "Always":
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "Answered"  and self.completed == True:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "Attempted"  and self.attempts>0:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
+            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+        return {
             'result': 'success',
             'selections': self.selections,
             'correctness': self.student_correctness,
@@ -494,7 +524,8 @@ class InlineDropdownXBlock(XBlock):
             'feedback_list' : self.correctness_text,
             'current_feedback': self.current_feedback,
             'completed': self.completed,
-
+            'reset_button' : reset_button,
+             'answer_button' : answer_button
         }
 
     @XBlock.json_handler
