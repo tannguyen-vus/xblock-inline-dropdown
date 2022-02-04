@@ -183,29 +183,36 @@ class InlineDropdownXBlock(XBlock):
         prompt = self._get_body(self.question_string)
         
         attributes = ''
-        reset_button=''
-        answer_button=''
+        reset_button=0
+        answer_button=0
+        show_answer =0
         if self.show_reset_button == 'True':
-            reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
+            reset_button=1
         if self.show_answer == "Always":
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
+            show_answer =1
         if self.show_answer == "Answered"  and self.completed == True:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
+            show_answer =1
         if self.show_answer == "Attempted"  and self.attempts>0:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
+            show_answer =1
         if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
-        html = self.resource_string('static/html/inline_dropdown_view.html')
-        frag = Fragment(html.format(display_name=self.display_name,
-                                    problem_progress=problem_progress,
-                                    prompt=prompt,
-                                    attributes=attributes,
-                                    title = self.title,
-                                    feedback=self.current_feedback,
-                                    feedback_list = self.feedback,
-                                    reset_button = reset_button,
-                                    answer_button = answer_button
-                                    ))
+            answer_button=1
+            show_answer =1
+        context ={
+            'display_name':self.display_name,
+                                    'problem_progress' : problem_progress,
+                                    'prompt': prompt,
+                                    'attributes' : attributes,
+                                    'title' : self.title,
+                                    'feedback' : self.current_feedback,
+                                    'feedback_list' : self.feedback,
+                                    'reset_button' : reset_button,
+                                    'answer_button' : answer_button
+        }
+        html = self.render_template('static/html/inline_dropdown_view.html',context)
+        frag = Fragment(html)
         frag.add_css(self.resource_string('static/css/inline_dropdown.css'))
         frag.add_javascript(self.resource_string('static/js/inline_dropdown_view.js'))
         frag.initialize_js('InlineDropdownXBlockInitView')
@@ -355,22 +362,22 @@ class InlineDropdownXBlock(XBlock):
 
         self.completed = True
         self.attempts += 1
-        reset_button=''
-        answer_button=''
+        reset_button=0
+        answer_button=0
         show_answer =0
         if self.show_reset_button == 'True':
-            reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
+            reset_button=1
         if self.show_answer == "Always":
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
             show_answer =1
         if self.show_answer == "Answered"  and self.completed == True:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
             show_answer =1
         if self.show_answer == "Attempted"  and self.attempts>0:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
             show_answer =1
         if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
             show_answer =1
         result = {
             'success': True,
@@ -443,22 +450,22 @@ class InlineDropdownXBlock(XBlock):
 
         self.completed = False
         
-        reset_button=''
-        answer_button=''
+        reset_button=0
+        answer_button=0
         show_answer =0
         if self.show_reset_button == 'True':
-            reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
+            reset_button=1
         if self.show_answer == "Always":
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
             show_answer =1
         if self.show_answer == "Answered"  and self.completed == True:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
             show_answer =1
         if self.show_answer == "Attempted"  and self.attempts>0:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
             show_answer =1
         if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
             show_answer =1
         result = {
             'success': True,
@@ -519,18 +526,23 @@ class InlineDropdownXBlock(XBlock):
     @XBlock.json_handler
     def restore_state(self, submissions, suffix=''):
         
-        reset_button=''
-        answer_button=''
+        reset_button=0
+        answer_button=0
+        show_answer =0
         if self.show_reset_button == 'True':
-            reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
+            reset_button=1
         if self.show_answer == "Always":
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
+            show_answer =1
         if self.show_answer == "Answered"  and self.completed == True:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
+            show_answer =1
         if self.show_answer == "Attempted"  and self.attempts>0:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
+            show_answer =1
         if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
-            answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            answer_button=1
+            show_answer =1
         return {
             'result': 'success',
             'selections': self.selections,

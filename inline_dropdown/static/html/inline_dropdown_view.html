@@ -1,7 +1,9 @@
+{% load i18n %}
 <div class='inline_dropdown'>
-	{title}
-	<div class='problem_progress'>({problem_progress})</div>
-	<div class='question_prompt'>{prompt}</div>
+	{% autoescape off %}
+	{{title}}
+	<div class='problem_progress'>({{problem_progress}})</div>
+	<div class='question_prompt'>{{prompt}}</div>
 	<div class='feedback' style='display:none'>{{feedback}}</div>
 	<div class='hint' style='display:none'>{{hint}}</div>
 	<div class='button_holder'>
@@ -18,11 +20,19 @@
 			value='Hint'></input>
 		</div>
 		<div style='display:inline' class='answer'>
-			{answer_button}
+			{% if answer_button == 0 %}
+			<input class="answer_button" type="button" value="Show answers" style="display: none;"></input>
+			{% else %}
+			<input class="answer_button" type="button" value="Show answers" style="display: inline;"></input>
+			{% endif %}
 		</div>
 		<div style='display:inline' class='reset'>
-			{reset_button}
-		
+			{% if reset_button == 0 %}
+			<input  class="reset_button" type="button" value="Reset" style="display: none;"></input>
+			{% else %}
+			<input  class="reset_button" type="button" value="Reset" style="display: inline;"></input>
+			{% endif %}
 		</div>
 	</div>
+	{% endautoescape %}
 </div>

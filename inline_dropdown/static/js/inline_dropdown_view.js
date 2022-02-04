@@ -82,8 +82,22 @@ function InlineDropdownXBlockInitView(runtime, element) {
             // add decorations to indicate correctness
             add_decorations(result.correctness, result.selection_order,result.feedback_list,result.submissions,0);
         }
-        answer_div.html(result.answer_button);
-        reset_div.html(result.reset_button);
+        if (result.answer_button ==1)
+        {
+            $('.answer_button',element).css('display','inline');
+        }
+        else
+        {
+            $('.answer_button',element).css('display','none');
+        }
+        if (result.reset_button ==1)
+        {
+            $('.reset_button',element).css('display','inline');
+        }
+        else
+        {
+            $('.reset_button',element).css('display','none');
+        }
         
 	}
     function show_answers(result) {
@@ -190,8 +204,22 @@ function InlineDropdownXBlockInitView(runtime, element) {
         reset_prompt();
         reset_hint();
         reset_feedback();
-        answer_div.html(result.answer_button);
-        reset_div.html(result.reset_button);
+        if (result.answer_button ==1)
+        {
+            $('.answer_button',element).css('display','inline');
+        }
+        else
+        {
+            $('.answer_button',element).css('display','none');
+        }
+        if (result.reset_button ==1)
+        {
+            $('.reset_button',element).css('display','inline');
+        }
+        else
+        {
+            $('.reset_button',element).css('display','none');
+        }
 	}
 
 	function set_hints(result) {
