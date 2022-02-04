@@ -80,7 +80,7 @@ function InlineDropdownXBlockInitView(runtime, element) {
             // restore select values
             restore_selections(result.submissions);
             // add decorations to indicate correctness
-            add_decorations(result.correctness, result.selection_order,result.feedback_list,result.submissions,result.show_answer);
+            add_decorations(result.correctness, result.selection_order,result.feedback_list,result.submissions,0);
         }
         answer_div.html(result.answer_button);
         reset_div.html(result.reset_button);
@@ -215,7 +215,7 @@ function InlineDropdownXBlockInitView(runtime, element) {
 	function restore_state(result) {
 		if (result.completed == true) {
         	restore_selections(result.selections);
-        	add_decorations(result.correctness, result.selection_order,result.feedback_list,result.selections,result.show_answer);
+        	add_decorations(result.correctness, result.selection_order,result.feedback_list,result.selections,0);
         	show_feedback(result.current_feedback);
         }
 	}

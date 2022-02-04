@@ -408,12 +408,14 @@ class InlineDropdownXBlock(XBlock):
                 answer = self.correctness[key][keyn] +' | ' + answer
                 first_answer = self.correctness[key][keyn]
             self.correctness_text[key] = first_answer
-            self.current_feedback = '<p class="correct"><strong>(' + str(pos) + ') correct answers: </strong>' + first_answer+ '</p>' + self.current_feedback 
-            
-                #else:
-                #self.current_feedback = default_feedback + self.current_feedback
-            self.student_correctness[key] = 'True'
-            correct_count += 1
+            if  str(selected_text).lower() in self.correctness[key]:
+                default_feedback = '<p class="correct"><strong>(' + str(pos) + ') Correct</strong></p>'
+                self.student_correctness[key] = 'True'
+                correct_count += 1
+            else:
+                default_feedback = '<p class="incorrect"><strong>(' + str(pos) + ') Incorrect</strong></p>'
+                self.student_correctness[key] = 'False'
+                correct_count += 1
         result = {
             'success': True,
             'status': max_attempts,
