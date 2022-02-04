@@ -55,7 +55,7 @@ class InlineDropdownXBlock(XBlock):
         help='This title appears in header pane')
     show_answer = String(
         display_name='Show Answer',
-        default='Always',
+        default='After All Attempts or Correct',
         scope=Scope.settings,
         help='This title appears in header pane')
     show_reset_button = String(
@@ -302,6 +302,7 @@ class InlineDropdownXBlock(XBlock):
             'feedback': self.current_feedback,
             'correctness': self.student_correctness,
             'selection_order': self.selection_order,
+
             }
             return result
         self.selections = submissions['selections']
@@ -356,16 +357,21 @@ class InlineDropdownXBlock(XBlock):
         self.attempts += 1
         reset_button=''
         answer_button=''
+        show_answer =0
         if self.show_reset_button == 'True':
             reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
         if self.show_answer == "Always":
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            show_answer =1
         if self.show_answer == "Answered"  and self.completed == True:
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            show_answer =1
         if self.show_answer == "Attempted"  and self.attempts>0:
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            show_answer =1
         if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            show_answer =1
         result = {
             'success': True,
             'problem_progress': self._get_problem_progress(),
@@ -375,7 +381,8 @@ class InlineDropdownXBlock(XBlock):
             'correctness': self.student_correctness,
             'selection_order': self.selection_order,
             'reset_button' :reset_button,
-            'answer_button' : answer_button
+            'answer_button' : answer_button,
+            'show_answer' : show_answer
         }
         return result
     @XBlock.json_handler
@@ -436,21 +443,27 @@ class InlineDropdownXBlock(XBlock):
         
         reset_button=''
         answer_button=''
+        show_answer =0
         if self.show_reset_button == 'True':
             reset_button='<input  class="reset_button" type="button" value="Reset"></input>'
         if self.show_answer == "Always":
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            show_answer =1
         if self.show_answer == "Answered"  and self.completed == True:
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            show_answer =1
         if self.show_answer == "Attempted"  and self.attempts>0:
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            show_answer =1
         if self.show_answer == "After All Attempts or Correct" and self.attempts >= self.max_attempts:
             answer_button='<input class="answer_button" type="button" value="Show answers"></input>'
+            show_answer =1
         result = {
             'success': True,
             'problem_progress': self._get_problem_progress(),
             'reset_button' : reset_button,
-            'answer_button' : answer_button
+            'answer_button' : answer_button,
+            'show_answer' : show_answer
         }
         return result
 

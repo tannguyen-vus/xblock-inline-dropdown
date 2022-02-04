@@ -80,7 +80,7 @@ function InlineDropdownXBlockInitView(runtime, element) {
             // restore select values
             restore_selections(result.submissions);
             // add decorations to indicate correctness
-            add_decorations(result.correctness, result.selection_order,result.feedback_list,result.submissions,0);
+            add_decorations(result.correctness, result.selection_order,result.feedback_list,result.submissions,result.show_answer);
         }
         answer_div.html(result.answer_button);
         reset_div.html(result.reset_button);
@@ -159,11 +159,21 @@ function InlineDropdownXBlockInitView(runtime, element) {
                         $(this).attr('class','type_true');
                         $(this).attr('title', 'corrected answer: '+correctness_val);
                     }
-        		} else {
-                    $('&nbsp;<span class="status correct"><em> (correct answer: '+feedback_val+')</em></span>').insertAfter(this);
-                    $('&nbsp;<span class="inline-dropdown feedback_number_incorrect"> (' + decoration_number + ')</span>').insertAfter(this);
-                    $('&nbsp;<span class="fa fa-times status incorrect"/>').insertAfter(this);
-           
+        		} 
+                else 
+                {
+                    if (show_answer == 1)
+                    {
+                        $('&nbsp;<span class="status correct"><em> (correct answer: '+feedback_val+')</em></span>').insertAfter(this);
+                        $('&nbsp;<span class="inline-dropdown feedback_number_incorrect"> (' + decoration_number + ')</span>').insertAfter(this);
+                        $('&nbsp;<span class="fa fa-times status incorrect"/>').insertAfter(this);
+                    }
+                    else
+                    {
+                        //$('&nbsp;<span class="status correct"><em> (correct answer: '+feedback_val+')</em></span>').insertAfter(this);
+                        $('&nbsp;<span class="inline-dropdown feedback_number_incorrect"> (' + decoration_number + ')</span>').insertAfter(this);
+                        $('&nbsp;<span class="fa fa-times status incorrect"/>').insertAfter(this);
+                    }
                     $(this).attr('class','type_false');
                     
                     //$(this).attr('title', feedback_val);
@@ -205,7 +215,7 @@ function InlineDropdownXBlockInitView(runtime, element) {
 	function restore_state(result) {
 		if (result.completed == true) {
         	restore_selections(result.selections);
-        	add_decorations(result.correctness, result.selection_order,result.feedback_list,result.selections,0);
+        	add_decorations(result.correctness, result.selection_order,result.feedback_list,result.selections,result.show_answer);
         	show_feedback(result.current_feedback);
         }
 	}
